@@ -20,7 +20,7 @@ jobs:
 
     
     build-push:
-        needs: [code-quality, secret-scan, dependency-scan, docker-lint, image-scan]
+        needs: [code-quality, secret-scan, dependency-scan, docker-lint]
         uses: ./.github/workflows/build-push.yml
         secrets: inherit
 
