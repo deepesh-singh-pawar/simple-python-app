@@ -21,6 +21,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME}}/simple-python-app:${{github.ref_name}}
-                ${{ secrets.DOCKER_USERNAME}}/simple-python-app:latest
-                ${{ secrets.DOCKER_USERNAME}}/simpele-python-app:${{ github.sha }}
+          tags: ${{ secrets.DOCKER_USERNAME}}/simple-python-app:${{ github.sha }}
+                
