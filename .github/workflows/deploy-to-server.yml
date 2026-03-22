@@ -37,32 +37,14 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          name: Deploy App
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Deploy container on server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-
           script: |
+
             echo "Updating packages..."
             sudo apt-get update -y
 
             echo "Installing Docker if missing..."
             if ! command -v docker &> /dev/null
-            then
+              then
               sudo apt-get install -y docker.io
               sudo systemctl start docker
               sudo systemctl enable docker
