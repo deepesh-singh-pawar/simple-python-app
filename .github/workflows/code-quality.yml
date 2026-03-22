@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt  
       - name: Run linters
-        run: flake8 app.py
+        run: flake8 -r app.py
       - name: Run SAST  
         run: bandit -r app.py
 
