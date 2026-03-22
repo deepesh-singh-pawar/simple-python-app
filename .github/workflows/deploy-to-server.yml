@@ -1,0 +1,26 @@
+# This workflow will deploy the code to the ec2 instance
+name: Deploy to ec 2 instance
+
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy Docker file
+        uses: actions/checkout@v3
+      - name: Deploy to EC2 instance
+        uses: appleboy/ssh-action@1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "Deploying to EC2 instance..."
+            # cd /path/to/your/app
+            # docker pull your-docker-image:latest
+            # docker stop your-container || true
+            # docker rm your-container || true
+            # docker run -d --name your-container -p 80:80 your-docker-image:latest    
+
