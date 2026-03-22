@@ -17,8 +17,8 @@ jobs:
         uses: pypa/gh-action-pip-audit@v1
       - name: Pip Audit
         run: pip install pip-audit && pip-audit --format json > audit-results.json
-        with:
-          python-version: "3.12"
+        # with:
+        #   python-version: "3.12"
       - name: Audit dependencies
         run: pip-audit -r requirements.txt --format json > audit-results.json 
         
