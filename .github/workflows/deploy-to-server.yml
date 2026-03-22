@@ -1,9 +1,8 @@
 name: Deploy App to EC2
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["DevSecOps Workflow - End to End Pipeline"]
 
 jobs:
 
