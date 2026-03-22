@@ -37,16 +37,48 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          name: Deploy App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy container on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+
           script: |
-            sudo apt-get install -y docker.io
-            sudo usermod -aG docker $USER && newgrp docker
-            
-            docker stop simple-python-app || true
-            docker rm python-app || true
+            echo "Updating packages..."
+            sudo apt-get update -y
 
-            docker pull ${{ secrets.DOCKER_USERNAME }}/simple-python-app:latest
+            echo "Installing Docker if missing..."
+            if ! command -v docker &> /dev/null
+            then
+              sudo apt-get install -y docker.io
+              sudo systemctl start docker
+              sudo systemctl enable docker
+            else
+              echo "Docker already installed"
+            fi
 
-            docker run -d \
+            echo "Deploying container..."
+
+            sudo docker stop python-app || true
+            sudo docker rm python-app || true
+
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/simple-python-app:latest
+
+            sudo docker run -d \
+              --restart always \
               -p 5000:5000 \
               --name python-app \
               ${{ secrets.DOCKER_USERNAME }}/simple-python-app:latest
