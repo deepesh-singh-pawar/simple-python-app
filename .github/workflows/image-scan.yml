@@ -21,7 +21,7 @@ jobs:
               output: trivy-results.json
               severity: HIGH,CRITICAL
               #exit-code: '1' # Fail the workflow if vulnerabilities are found
-              only-fixed: true # Only report vulnerabilities that have fixes available
+              ignore-unfixed: true # Ignore vulnerabilities that do not have a fix available
           - name: Upload Trivy report
             uses: actions/upload-artifact@v4
             with:
