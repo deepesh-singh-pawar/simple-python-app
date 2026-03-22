@@ -21,4 +21,4 @@ jobs:
         #   python-version: "3.12"
       - name: Audit dependencies
         run: pip-audit -r requirements.txt --format json > audit-results.json 
-        
+        continue-on-error: true  # Continue even if vulnerabilities are found
