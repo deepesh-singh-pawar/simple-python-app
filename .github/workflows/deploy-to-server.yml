@@ -1,26 +1,52 @@
-# This workflow will deploy the code to the ec2 instance
-name: Deploy to ec 2 instance
+name: Deploy App to EC2
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - main
 
 jobs:
+
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Copy Docker file
-        uses: actions/checkout@v3
-      - name: Deploy to EC2 instance
-        uses: appleboy/ssh-action@1.0.3
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/simple-python-app:latest .
+
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/simple-python-app:latest
+
+
+      - name: Deploy to EC2 server
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "Deploying to EC2 instance..."
-            # cd /path/to/your/app
-            # docker pull your-docker-image:latest
-            # docker stop your-container || true
-            # docker rm your-container || true
-            # docker run -d --name your-container -p 80:80 your-docker-image:latest    
 
+            docker stop python-app || true
+            docker rm python-app || true
+
+            docker pull ${{ secrets.DOCKER_USERNAME }}/simple-python-app:latest
+
+            docker run -d \
+              -p 5000:5000 \
+              --name python-app \
+              ${{ secrets.DOCKER_USERNAME }}/simple-python-app:latest
