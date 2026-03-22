@@ -1,0 +1,17 @@
+name: DevSecOps Workflow - End to End Pipeline
+
+on:
+  workflow_dispatch:
+jobs:
+  
+    code-quality:
+        uses: ./.github/workflows/code-quality.yml
+    
+    secret-scan:
+        uses: ./.github/workflows/secret-scan.yml
+    
+    dependency-scan:
+        uses: ./.github/workflows/dependency-scan.yml
+    
+    docker-lint:
+        uses: ./.github/workflows/docker-lint.yml
