@@ -57,10 +57,10 @@ jobs:
             sudo docker stop python-app || true
             sudo docker rm python-app || true
 
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/simple-python-app:{{ github.sha }}
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/simple-python-app:${{ github.sha }}
 
             sudo docker run -d \
               --restart always \
               -p 5000:5000 \
               --name python-app \
-              ${{ secrets.DOCKER_USERNAME }}/simple-python-app:{{ github.sha }}
+              ${{ secrets.DOCKER_USERNAME }}/simple-python-app:${{ github.sha }}
