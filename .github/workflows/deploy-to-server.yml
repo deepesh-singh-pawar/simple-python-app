@@ -23,12 +23,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/simple-python-app:{{ github.sha }} .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/simple-python-app:${{ github.sha }} .
 
 
       # - name: Push Docker image
       #   run: |
-      #     docker push ${{ secrets.DOCKER_USERNAME }}/simple-python-app:{{ github.sha }}
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/simple-python-app:${{ github.sha }}
 
 
       - name: Deploy to EC2 server
