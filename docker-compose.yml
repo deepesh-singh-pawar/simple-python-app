@@ -1,0 +1,40 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: simple-python-app
+    ports:
+      - "5000:5000"
+    environment:
+      - DD_SERVICE=simple-python-app
+      - DD_ENV=${DD_ENV:-dev}
+      - DD_VERSION=${DD_VERSION:-1.0.0}
+      - DD_LOG_LEVEL=${DD_LOG_LEVEL:-INFO}
+      - DD_LOGS_INJECTION=true
+      - DD_TRACE_ENABLED=true
+      - DD_AGENT_HOST=datadog-agent
+      - DD_TRACE_AGENT_PORT=8126
+    depends_on:
+      - datadog-agent
+    labels:
+      com.datadoghq.tags.service: "simple-python-app"
+      com.datadoghq.tags.env: "${DD_ENV:-dev}"
+      com.datadoghq.tags.version: "${DD_VERSION:-1.0.0}"
+
+  datadog-agent:
+    image: gcr.io/datadoghq/agent:latest
+    container_name: datadog-agent
+    environment:
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_SITE=${DD_SITE:-datadoghq.com}
+      - DD_LOGS_ENABLED=true
+      - DD_APM_ENABLED=true
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+    ports:
+      - "8126:8126"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
