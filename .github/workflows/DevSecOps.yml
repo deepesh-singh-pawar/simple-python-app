@@ -2,7 +2,7 @@ name: DevSecOps Workflow - End to End Pipeline
 
 on:
   push: 
-    branches: [dev-1]  
+    branches: [git_tag]  
   
 jobs:
   
